@@ -9,10 +9,12 @@ include_directories("include")
 find_package(CUDA  REQUIRED)
 include_directories("${CUDA_INCLUDE_DIRS}")
 
-set(summer24_SOURCES
-    src/main.cpp
-	)
+set(SOURCE_FILES
+    src/Graph.cpp
+)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
-add_executable(main ${summer24_SOURCES})
+add_executable(main ${SOURCE_FILES} main.cpp)
+
+add_executable(test ${SOURCE_FILES} test.cpp)
