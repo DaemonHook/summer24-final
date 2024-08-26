@@ -15,7 +15,7 @@ public:
     virtual bool end() = 0;
 };
 
-class LinkGraphNodeIterator : NodeIterator {
+class LinkGraphNodeIterator : public NodeIterator {
 public:
     LinkGraphNodeIterator(nodeId_t start, nodeId_t end, std::vector<nodeId_t>* ea)
     {
@@ -80,11 +80,11 @@ public:
     std::unique_ptr<NodeIterator> getNeighbors(nodeId_t nodeId)
     {
         nodeId_t start = va[nodeId];
-        if (start == NO_EDGE) {
-            return std::make_unique<NodeIterator>(new LinkGraphNodeIterator(0, 0, nullptr));
-        }
+        // if (start == NO_EDGE) {
+        //     return std::make_unique<LinkGraphNodeIterator>(0, 0, nullptr);
+        // }
         nodeId_t end = nodeId == vertexNum - 1 ? ea.size() : va[nodeId + 1];
-        return std::make_unique<NodeIterator>(new LinkGraphNodeIterator(start, end, &ea));
+        return std::make_unique<LinkGraphNodeIterator>(start, end, &ea);
     }
 
     // va和ea作用见文献

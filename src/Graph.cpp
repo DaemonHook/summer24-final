@@ -29,11 +29,6 @@ void LinkGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources
     }
 }
 
-LinkGraph::LinkGraph(nodeId_t nodeNum, const std::vector<nodeId_t>& sources, const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)
-{
-    this->construct(nodeNum, sources, dests, weights);
-}
-
 void MatrixGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources, const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)
 {
     _mat.resize(nodeNum * nodeNum, -1);
