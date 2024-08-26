@@ -33,3 +33,19 @@ LinkGraph::LinkGraph(nodeId_t nodeNum, const std::vector<nodeId_t>& sources, con
 {
     this->construct(nodeNum, sources, dests, weights);
 }
+
+void MatrixGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources, const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)
+{
+    _mat.resize(nodeNum * nodeNum, -1);
+
+    assert(sources.size() == dests.size() && dests.size() == weights.size());
+    
+    long edgeNum = sources.size();
+
+    for (long i = 0; i < edgeNum; i++) {
+        nodeId_t source = sources[i];
+        nodeId_t dest = dests[i];
+        weight_t weight = weights[i];
+        mat(source, dest) = weight;
+    }
+}

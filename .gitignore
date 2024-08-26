@@ -21,6 +21,7 @@ bin/
 *.fatbin
 
 build/
-
+out/
+.vs
 .vscode
 .idea
