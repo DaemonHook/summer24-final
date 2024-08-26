@@ -9,13 +9,40 @@
 #include <vector>
 
 class NodeIterator {
+public:
     virtual nodeId_t get() = 0;
     virtual void toNext() = 0;
     virtual bool end() = 0;
 };
 
+class LinkGraphNodeIterator : NodeIterator {
+public:
+    LinkGraphNodeIterator(nodeId_t start, nodeId_t end, std::vector<nodeId_t>* ea)
+    {
+        _start = start;
+        _end = end;
+        _ea = ea;
+        _current = start;
+    };
+
+    nodeId_t get() override { return _ea->at(_current); }
+
+    void toNext() override
+    {
+        _current++;
+        assert(_current <= _end);
+    }
+
+    bool end() override { return _current == _end; }
+
+private:
+    nodeId_t _current, _start, _end;
+    std::vector<nodeId_t>* _ea;
+};
+
 /// @brief 图类型的接口
 class IGraph {
+protected:
     /// @brief 建图的接口（节点编号从0开始）
     /// @param nodeNum 节点个数
     /// @param sources 边的起点
@@ -26,13 +53,12 @@ class IGraph {
         = 0;
 
 public:
-    // virtual std::unique_ptr<NodeIterator> getNeighbors(nodeId_t nodeId) = 0;
-
     virtual nodeId_t getNodeNum() const = 0;
 };
 
 /// @brief 基于紧凑邻接表的图
 class LinkGraph : public IGraph {
+protected:
     /// @brief 建图的接口（节点编号从0开始）
     /// @param nodeNum 节点个数
     /// @param sources 边的起点
@@ -51,6 +77,16 @@ public:
 
     nodeId_t getNodeNum() const { return vertexNum; }
 
+    std::unique_ptr<NodeIterator> getNeighbors(nodeId_t nodeId)
+    {
+        nodeId_t start = va[nodeId];
+        if (start == NO_EDGE) {
+            return std::make_unique<NodeIterator>(new LinkGraphNodeIterator(0, 0, nullptr));
+        }
+        nodeId_t end = nodeId == vertexNum - 1 ? ea.size() : va[nodeId + 1];
+        return std::make_unique<NodeIterator>(new LinkGraphNodeIterator(start, end, &ea));
+    }
+
     // va和ea作用见文献
     std::vector<size_t> va;
     std::vector<nodeId_t> ea;
@@ -59,11 +95,8 @@ public:
     nodeId_t vertexNum;
 };
 
-// class LinkGraphNodeIterator: NodeIterator {
-//
-// };
-
 class MatrixGraph : public IGraph {
+protected:
     /// @brief 建图的接口（节点编号从0开始）
     /// @param nodeNum 节点个数
     /// @param sources 边的起点
