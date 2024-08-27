@@ -5,6 +5,8 @@ void LinkGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources
     const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)
 {
     va.resize(nodeNum, NO_EDGE);
+    inDeg.resize(nodeNum);
+    outDeg.resize(nodeNum);
 
     // 需要 node id 的顺序
     std::map<nodeId_t, std::vector<std::pair<nodeId_t, weight_t>>> links;
@@ -15,7 +17,9 @@ void LinkGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources
 
     for (long i = 0; i < edgeNum; i++) {
         nodeId_t source = sources[i];
+        outDeg[source]++;
         nodeId_t dest = dests[i];
+        inDeg[source]++;
         weight_t weight = weights[i];
         links[source].push_back({ dest, weight });
     }

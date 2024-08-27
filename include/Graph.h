@@ -89,7 +89,10 @@ public:
     std::vector<nodeId_t> ea;
     // 边的权重
     std::vector<weight_t> weights;
+    // 节点数量
     nodeId_t vertexNum;
+    // 出度和入度
+    std::vector<long> inDeg, outDeg;
 };
 
 class MatrixGraph : public IGraph {

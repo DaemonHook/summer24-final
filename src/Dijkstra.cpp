@@ -69,3 +69,4 @@ std::vector<nodeId_t> MatrixGraph::dijkstra(nodeId_t start)
     }
     return dist;
 }
+
