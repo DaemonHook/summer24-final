@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include <iostream>
 
 void LinkGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources,
     const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)
@@ -29,26 +30,30 @@ void LinkGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources
     }
 }
 
-std::unique_ptr<NodeIterator> LinkGraph::getSuccessors(nodeId_t nodeId)
+LinkGraphNeighborIterator LinkGraph::getSuccessors(nodeId_t nodeId)
 {
-    nodeId_t start = va[nodeId];
+    // 没有后继
+    if (va[nodeId] == NO_EDGE) {
+        return {0, 0, nullptr, nullptr};
+    }
 
+    long startEdge = va[nodeId];
+    
     nodeId_t nextNode = nodeId + 1;
-    nodeId_t end;
+    long endEdge;
 
     // 处理下一个节点没有出边的情况
-    while (nextNode != vertexNum && va[nextNode] != NO_EDGE) {
+    while (nextNode != vertexNum && va[nextNode] == NO_EDGE) {
         nextNode++;
     }
 
     // 如果没有下一个节点，那么end就为ea的最后一个
     if (nextNode == vertexNum) {
-        end = (nodeId_t)ea.size();
+        endEdge = (long)ea.size();
     } else {
-        end = ea[nextNode];
+        endEdge = va[nextNode];
     }
-
-    return std::make_unique<LinkGraphNodeIterator>(start, end, &ea);
+    return LinkGraphNeighborIterator(startEdge, endEdge, &ea, &weights);
 }
 
 void MatrixGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources, const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)

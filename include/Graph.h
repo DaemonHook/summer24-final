@@ -8,38 +8,31 @@
 #include <utility>
 #include <vector>
 
-class NodeIterator {
+class LinkGraphNeighborIterator {
 public:
-    virtual nodeId_t get() = 0;
-    virtual void toNext() = 0;
-    virtual bool end() = 0;
-
-    virtual ~NodeIterator() = 0;
-};
-
-class LinkGraphNodeIterator : public NodeIterator {
-public:
-    LinkGraphNodeIterator(nodeId_t start, nodeId_t end, std::vector<nodeId_t>* ea)
+    LinkGraphNeighborIterator(long startEdge, long endEdge, std::vector<nodeId_t>* ea, std::vector<weight_t>* weights)
+    : _startEdge(startEdge), _endEdge(endEdge)
     {
-        _start = start;
-        _end = end;
+        _current = startEdge;
         _ea = ea;
-        _current = start;
+        _weights = weights;
     };
 
-    nodeId_t get() override { return _ea->at(_current); }
+    nodeId_t getId() { return _ea->at(_current); }
+    weight_t getWeight() { return _weights->at(_current); }
 
-    void toNext() override
+    void toNext()
     {
         _current++;
-        assert(_current <= _end);
     }
 
-    bool end() override { return _current == _end; }
+    bool end() { return _current >= _endEdge; }
 
-private:
-    nodeId_t _current, _start, _end;
+public:
+    const long _startEdge, _endEdge;
+    long _current;
     std::vector<nodeId_t>* _ea;
+    std::vector<weight_t>* _weights;
 };
 
 /// @brief 图类型的接口
@@ -80,7 +73,7 @@ public:
     nodeId_t getNodeNum() const { return vertexNum; }
 
     // 获取节点的后继迭代器
-    std::unique_ptr<NodeIterator> getSuccessors(nodeId_t nodeId);
+    LinkGraphNeighborIterator getSuccessors(nodeId_t nodeId);
 
     // va和ea作用见文献
     std::vector<size_t> va;

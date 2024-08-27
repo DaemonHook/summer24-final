@@ -3,6 +3,14 @@
 #include <iostream>
 using namespace std;
 
+template<typename Derived, typename Base>
+std::unique_ptr<Derived> dynamic_unique_ptr_cast(std::unique_ptr<Base>&& base) {
+    if (auto derived = dynamic_cast<Derived*>(base.get())) {
+        return std::unique_ptr<Derived>(derived);
+    }
+    return nullptr;
+}
+
 int main()
 {
     int n, m;
@@ -29,4 +37,13 @@ int main()
     cout << "weights: ";
     for_each(linkGraph.weights.begin(), linkGraph.weights.end(), [](int i) { cout << i << ", "; });
     cout << endl;
+
+    nodeId_t id;
+    while (cin >> id) {
+        auto it = linkGraph.getSuccessors(id);
+        cout << "(neighborId, edge weights) of "  << ":\n";
+        for (; !it.end(); it.toNext()) {
+            cout << "(" << it.getId() << ", " << it.getWeight() << ")" << '\n';
+        }
+    }
 }
