@@ -13,6 +13,8 @@ public:
     virtual nodeId_t get() = 0;
     virtual void toNext() = 0;
     virtual bool end() = 0;
+
+    virtual ~NodeIterator() = 0;
 };
 
 class LinkGraphNodeIterator : public NodeIterator {
@@ -77,15 +79,8 @@ public:
 
     nodeId_t getNodeNum() const { return vertexNum; }
 
-    std::unique_ptr<NodeIterator> getNeighbors(nodeId_t nodeId)
-    {
-        nodeId_t start = va[nodeId];
-        // if (start == NO_EDGE) {
-        //     return std::make_unique<LinkGraphNodeIterator>(0, 0, nullptr);
-        // }
-        nodeId_t end = nodeId == vertexNum - 1 ? ea.size() : va[nodeId + 1];
-        return std::make_unique<LinkGraphNodeIterator>(start, end, &ea);
-    }
+    // 获取节点的后继迭代器
+    std::unique_ptr<NodeIterator> getSuccessors(nodeId_t nodeId);
 
     // va和ea作用见文献
     std::vector<size_t> va;

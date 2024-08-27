@@ -29,12 +29,34 @@ void LinkGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources
     }
 }
 
+std::unique_ptr<NodeIterator> LinkGraph::getSuccessors(nodeId_t nodeId)
+{
+    nodeId_t start = va[nodeId];
+
+    nodeId_t nextNode = nodeId + 1;
+    nodeId_t end;
+
+    // 处理下一个节点没有出边的情况
+    while (nextNode != vertexNum && va[nextNode] != NO_EDGE) {
+        nextNode++;
+    }
+
+    // 如果没有下一个节点，那么end就为ea的最后一个
+    if (nextNode == vertexNum) {
+        end = (nodeId_t)ea.size();
+    } else {
+        end = ea[nextNode];
+    }
+
+    return std::make_unique<LinkGraphNodeIterator>(start, end, &ea);
+}
+
 void MatrixGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources, const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)
 {
     _mat.resize(nodeNum * nodeNum, -1);
 
     assert(sources.size() == dests.size() && dests.size() == weights.size());
-    
+
     long edgeNum = sources.size();
 
     for (long i = 0; i < edgeNum; i++) {
