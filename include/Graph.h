@@ -1,5 +1,4 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+#pragma once
 
 #include "Common.h"
 #include <cassert>
@@ -77,6 +76,8 @@ public:
 
     nodeId_t getNodeNum() const { return vertexNum; }
 
+    long getEdgeNum() const { return (long)ea.size(); }
+
     // 获取节点的后继迭代器
     LinkGraphNeighborIterator getSuccessors(nodeId_t nodeId);
 
@@ -85,7 +86,7 @@ public:
     bool hasCycle() override;
 
     // va和ea作用见文献
-    std::vector<size_t> va;
+    std::vector<nodeId_t> va;
     std::vector<nodeId_t> ea;
     // 边的权重
     std::vector<weight_t> weights;
@@ -123,5 +124,3 @@ public:
     std::vector<weight_t> _mat;
     nodeId_t vertexNum;
 };
-
-#endif

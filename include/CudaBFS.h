@@ -1,9 +1,6 @@
-#ifndef CUDABFS_H
-#define CUDABFS_H
+#pragma once
 
 #include "Graph.h"
 #include <cuda_runtime.h>
 
-
-
-#endif
+std::vector<int> cudaBFS(LinkGraph& graph, nodeId_t sourceId);

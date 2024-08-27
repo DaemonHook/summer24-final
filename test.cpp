@@ -1,49 +1,45 @@
-#include "Graph.h"
-#include <algorithm>
 #include <iostream>
-using namespace std;
+#include <functional>
 
-template<typename Derived, typename Base>
-std::unique_ptr<Derived> dynamic_unique_ptr_cast(std::unique_ptr<Base>&& base) {
-    if (auto derived = dynamic_cast<Derived*>(base.get())) {
-        return std::unique_ptr<Derived>(derived);
+/// @brief 测量cpu函数运行时间 (ms)
+/// @return 如果函数返回 void，那么结果类型为 std::tuple<double>，否则为 std::tuple<double, Ret>
+template <typename Func, typename... Args>
+auto allocateAndCall(Func func, Args&&... args) {
+    
+    // 定义返回类型
+    using ResultType = decltype(func(std::forward<Args>(args)...));
+    using ReturnType = std::conditional_t<std::is_void_v<ResultType>, std::tuple<double>, std::tuple<double, ResultType>>;
+    
+    if constexpr (std::is_void_v<ResultType>) {
+        // 如果函数返回 void，直接调用
+        func(std::forward<Args>(args)...);
+    } else {
+        // 如果函数有返回值，获取函数返回值
+        auto result = func(std::forward<Args>(args)...);
+        return result;
     }
-    return nullptr;
 }
 
-int main()
-{
-    int n, m;
-    cin >> n >> m;
+// 示例函数
+int exampleFunction(int x, int y) {
+    return x + y;
+}
 
-    vector<nodeId_t> sources, dests;
-    vector<weight_t> weights;
+double anotherFunction(int x, int y) {
+    return static_cast<double>(x) / y;
+}
 
-    for (int i = 0; i < m; i++) {
-        int s, d, w;
-        cin >> s >> d >> w;
-        sources.push_back(s);
-        dests.push_back(d);
-        weights.push_back(w);
-    }
+int main() {
+    // 创建std::function对象，并传入具体的函数
+    std::function<int(int, int)> func1 = exampleFunction;
+    std::function<double(int, int)> func2 = anotherFunction;
 
-    LinkGraph linkGraph(n, sources, dests, weights);
-    cout << "va: ";
-    for_each(linkGraph.va.begin(), linkGraph.va.end(), [](int i) { cout << i << ", "; });
-    cout << "\n";
-    cout << "ea: ";
-    for_each(linkGraph.ea.begin(), linkGraph.ea.end(), [](int i) { cout << i << ", "; });
-    cout << "\n";
-    cout << "weights: ";
-    for_each(linkGraph.weights.begin(), linkGraph.weights.end(), [](int i) { cout << i << ", "; });
-    cout << endl;
+    // 调用allocateAndCall
+    int result1 = allocateAndCall(exampleFunction, 5, 3);
+    double result2 = allocateAndCall(anotherFunction, 10, 2);
+    
+    std::cout << "Result of exampleFunction: " << result1 << std::endl;
+    std::cout << "Result of anotherFunction: " << result2 << std::endl;
 
-    nodeId_t id;
-    while (cin >> id) {
-        auto it = linkGraph.getSuccessors(id);
-        cout << "(neighborId, edge weights) of "  << ":\n";
-        for (; !it.end(); it.toNext()) {
-            cout << "(" << it.getId() << ", " << it.getWeight() << ")" << '\n';
-        }
-    }
+    return 0;
 }

@@ -1,6 +1,4 @@
-#ifndef COMMON_H
-#define COMMON_H
-
+#pragma once
 // 权重的数据类型
 using weight_t = int;
 
@@ -9,5 +7,3 @@ using nodeId_t = int;
 
 // 顶点没有边
 constexpr nodeId_t NO_EDGE = -1;
-
-#endif

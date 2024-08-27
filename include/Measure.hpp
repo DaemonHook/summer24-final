@@ -1,3 +1,5 @@
+#pragma once
+
 #include <chrono>
 #include <cuda_runtime.h>
 #include <type_traits>

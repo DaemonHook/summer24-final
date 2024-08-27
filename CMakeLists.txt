@@ -15,6 +15,10 @@ include_directories("${CUDA_INCLUDE_DIRS}")
 set(SOURCE_FILES
     src/Graph.cpp
     src/CudaCheckError.cpp
+    src/Dijkstra.cpp
+    src/CycleDetection.cpp
+    src/CudaBFS.cu
+    src/CudaGraph.cu
 )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
