@@ -24,6 +24,6 @@ struct CudaLinkGraph {
     /// @brief 权重数组
     weight_t* d_weights;
 
-    CudaLinkGraph(LinkGraph& memoryGraph);
+    CudaLinkGraph(LinkGraph& graph);
     ~CudaLinkGraph();
 };

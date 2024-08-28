@@ -1,45 +1,37 @@
+#include "CudaBFS.h"
+#include "CudaGraph.h"
+#include "Graph.h"
+#include <algorithm>
 #include <iostream>
-#include <functional>
 
-/// @brief 测量cpu函数运行时间 (ms)
-/// @return 如果函数返回 void，那么结果类型为 std::tuple<double>，否则为 std::tuple<double, Ret>
-template <typename Func, typename... Args>
-auto allocateAndCall(Func func, Args&&... args) {
-    
-    // 定义返回类型
-    using ResultType = decltype(func(std::forward<Args>(args)...));
-    using ReturnType = std::conditional_t<std::is_void_v<ResultType>, std::tuple<double>, std::tuple<double, ResultType>>;
-    
-    if constexpr (std::is_void_v<ResultType>) {
-        // 如果函数返回 void，直接调用
-        func(std::forward<Args>(args)...);
-    } else {
-        // 如果函数有返回值，获取函数返回值
-        auto result = func(std::forward<Args>(args)...);
-        return result;
+using namespace std;
+
+int main()
+{
+    nodeId_t nodeNum;
+    int edgeNum;
+    cin >> nodeNum >> edgeNum;
+    vector<nodeId_t> sources, dests;
+    vector<weight_t> weights;
+    for (int i = 0; i < edgeNum; i++) {
+        nodeId_t source, dest;
+        weight_t weight;
+        cin >> source >> dest >> weight;
+        sources.push_back(source);
+        dests.push_back(dest);
+        weights.push_back(weight);
     }
-}
+    LinkGraph linkGraph(nodeNum, sources, dests, weights);
+    cout << "va: ";
+    for_each(linkGraph.va.begin(), linkGraph.va.end(), [](int i) { cout << i << ' '; });
+    cout << endl;
+    cout << "ea: ";
+    for_each(linkGraph.ea.begin(), linkGraph.ea.end(), [](int i) { cout << i << ' '; });
+    cout << endl;
 
-// 示例函数
-int exampleFunction(int x, int y) {
-    return x + y;
-}
-
-double anotherFunction(int x, int y) {
-    return static_cast<double>(x) / y;
-}
-
-int main() {
-    // 创建std::function对象，并传入具体的函数
-    std::function<int(int, int)> func1 = exampleFunction;
-    std::function<double(int, int)> func2 = anotherFunction;
-
-    // 调用allocateAndCall
-    int result1 = allocateAndCall(exampleFunction, 5, 3);
-    double result2 = allocateAndCall(anotherFunction, 10, 2);
-    
-    std::cout << "Result of exampleFunction: " << result1 << std::endl;
-    std::cout << "Result of anotherFunction: " << result2 << std::endl;
-
+    auto distances = cudaBFS(linkGraph, 0);
+    cout << "distances: ";
+    for_each(distances.begin(), distances.end(), [](int i) { cout << i << ' '; });
+    cout << endl;
     return 0;
 }

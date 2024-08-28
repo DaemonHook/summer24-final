@@ -2,4 +2,10 @@
 
 #include <cuda_runtime.h>
 
-void checkError(cudaError_t err);
+#define checkError(err)                                                 \
+    if (err != cudaSuccess) {                                           \
+        fprintf(stderr, "%s", __FILE__);                                \
+        fprintf(stderr, " line %d", __LINE__);                          \
+        fprintf(stderr, ": CUDA Runtime Error: %s\n", cudaGetErrorString(err)); \
+        exit(-1);                                                       \
+    }

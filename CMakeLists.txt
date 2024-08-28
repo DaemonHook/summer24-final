@@ -12,14 +12,8 @@ include_directories("include")
 find_package(CUDA  REQUIRED)
 include_directories("${CUDA_INCLUDE_DIRS}")
 
-set(SOURCE_FILES
-    src/Graph.cpp
-    src/CudaCheckError.cpp
-    src/Dijkstra.cpp
-    src/CycleDetection.cpp
-    src/CudaBFS.cu
-    src/CudaGraph.cu
-)
+aux_source_directory(src SOURCE_FILES)
+message("SOURCE_FILES: ${SOURCE_FILES}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
