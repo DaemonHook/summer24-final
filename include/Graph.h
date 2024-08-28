@@ -1,7 +1,9 @@
-#pragma once
+#ifndef GRAPH_H
+#define GRAPH_H
 
 #include "Common.h"
 #include <cassert>
+#include <ctime>
 #include <map>
 #include <memory>
 #include <queue>
@@ -53,6 +55,9 @@ public:
     virtual std::vector<nodeId_t> dijkstra(nodeId_t start) = 0;
 
     virtual bool hasCycle() = 0;
+
+    virtual std::vector<nodeId_t> bfs(nodeId_t start) = 0;
+    virtual std::vector<std::vector<nodeId_t>> floyd() = 0;
 };
 
 /// @brief 基于紧凑邻接表的图
@@ -76,17 +81,19 @@ public:
 
     nodeId_t getNodeNum() const { return vertexNum; }
 
-    long getEdgeNum() const { return (long)ea.size(); }
-
     // 获取节点的后继迭代器
     LinkGraphNeighborIterator getSuccessors(nodeId_t nodeId);
 
     std::vector<nodeId_t> dijkstra(nodeId_t start) override;
 
+    std::vector<nodeId_t> bfs(nodeId_t start) override;
+
+    std::vector<std::vector<nodeId_t>> floyd() override;
+
     bool hasCycle() override;
 
     // va和ea作用见文献
-    std::vector<nodeId_t> va;
+    std::vector<size_t> va;
     std::vector<nodeId_t> ea;
     // 边的权重
     std::vector<weight_t> weights;
@@ -121,6 +128,10 @@ public:
 
     bool hasCycle() override;
 
+    std::vector<std::vector<nodeId_t>> floyd() override;
+
     std::vector<weight_t> _mat;
     nodeId_t vertexNum;
 };
+
+#endif
