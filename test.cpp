@@ -1,5 +1,6 @@
 #include "CudaBFS.h"
 #include "CudaGraph.h"
+#include "CudaSSSP.h"
 #include "Graph.h"
 #include <algorithm>
 #include <iostream>
@@ -29,9 +30,9 @@ int main()
     for_each(linkGraph.ea.begin(), linkGraph.ea.end(), [](int i) { cout << i << ' '; });
     cout << endl;
 
-    auto distances = cudaBFS(linkGraph, 0);
-    cout << "distances: ";
-    for_each(distances.begin(), distances.end(), [](int i) { cout << i << ' '; });
+    auto costs = cudaSSSP(linkGraph, 0);
+    cout << "costs: ";
+    for_each(costs.begin(), costs.end(), [](int i) { cout << i << ' '; });
     cout << endl;
     return 0;
 }
