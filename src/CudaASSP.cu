@@ -17,6 +17,7 @@ std::vector<std::vector<weight_t>> CudaASSP(MatrixGraph& graph)
 
     weight_t* d_cost;
     checkError(cudaMalloc(&d_cost, nodeNum * nodeNum * sizeof(weight_t)));
+    
 
 
     return std::vector<std::vector<weight_t>>();
