@@ -22,3 +22,7 @@ target_link_libraries(main ${CUDA_LIBRARIES})
 
 add_executable(test ${SOURCE_FILES} test.cpp)
 target_link_libraries(test ${CUDA_LIBRARIES})
+
+
+add_executable(BFSTest ${SOURCE_FILES} BFSTest.cpp)
+target_link_libraries(BFSTest ${CUDA_LIBRARIES})

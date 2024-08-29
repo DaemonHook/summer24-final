@@ -23,6 +23,7 @@ __global__ static void doALevel(nodeId_t nodeNum, long edgeNum, bool* toContinue
     if (tId < nodeNum) {
         // 如果当前node在队列里面
         if (frontier[tId]) {
+            // printf("%d is in frontier\n", tId);
             // 出队
             frontier[tId] = 0;
             // 设置visited
@@ -34,6 +35,7 @@ __global__ static void doALevel(nodeId_t nodeNum, long edgeNum, bool* toContinue
             for (nodeId_t i = start; i < end; i++) {
                 nodeId_t neighbor = ea[i];
                 if (!visited[neighbor]) {
+                    // printf("%d is not in frontier and not visited\n", neighbor);
                     distance[neighbor] = distance[tId] + 1;
                     // 入队
                     frontier[neighbor] = true;
@@ -68,7 +70,7 @@ std::vector<distance_t> cudaBFS(LinkGraph& graph, nodeId_t sourceId)
         *toContinue = false;
         // printf("doing level %d\n", level++);
         doALevel<<<grid, block>>>(cudaLG.nodeNum, cudaLG.edgeNum, toContinue, d_visited, d_frontier, d_distance,
-            cudaLG.d_edgeIndicesStart, cudaLG.d_edgeIndicesEnd, cudaLG.d_weights);
+            cudaLG.d_edgeIndicesStart, cudaLG.d_edgeIndicesEnd, cudaLG.d_ea);
         checkError(cudaDeviceSynchronize());
     }
 
