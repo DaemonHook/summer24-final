@@ -1,24 +1,35 @@
 #include "CudaASSP.h"
-#include <cuda_runtime.h>
 #include "CudaCheckError.h"
+#include "CudaSSSP.h"
+#include <cuda_runtime.h>
 
-/// @brief 内层的并行函数
-/// @param cost 当前的距离矩阵
-/// @param mat 邻接矩阵
-/// @return 
-__host__ void inner(nodeId_t nodeNum, weight_t* cost, weight_t* mat)
+std::vector<std::vector<weight_t>> CudaASSP(LinkGraph& graph)
 {
-}
-
-std::vector<std::vector<weight_t>> CudaASSP(MatrixGraph& graph)
-{
-    CudaMatGraph cudaMG(graph);
+    CudaLinkGraph cudaLG(graph);
     nodeId_t nodeNum = graph.getNodeNum();
 
+    int grid = (nodeNum + 1023) / 1024;
+    int block = 1024;
+
     weight_t* d_cost;
-    checkError(cudaMalloc(&d_cost, nodeNum * nodeNum * sizeof(weight_t)));
-    
+    checkError(cudaMalloc(&d_cost, nodeNum * sizeof(weight_t)));
+    std::vector<std::vector<weight_t>> costs;
 
+    // 依次求得每个点的SSSP
+    for (nodeId_t i = 0; i < nodeNum; i++) {
+        initCost<<<grid, block>>>(nodeNum, i, d_cost);
+        checkError(cudaDeviceSynchronize());
 
-    return std::vector<std::vector<weight_t>>();
+        for (nodeId_t j = 0; j < nodeNum - 1; j++) {
+            bellmanFord<<<grid, block>>>(nodeNum, cudaLG.d_edgeIndicesStart, cudaLG.d_edgeIndicesEnd, cudaLG.d_ea,
+                cudaLG.d_weights, d_cost);
+            checkError(cudaDeviceSynchronize());
+        }
+
+        std::vector<weight_t> curCost(nodeNum);
+        checkError(cudaMemcpy(curCost.data(), d_cost, nodeNum * sizeof(weight_t), cudaMemcpyDeviceToHost));
+        costs.push_back(std::move(curCost));
+    }
+    checkError(cudaFree(d_cost));
+    return costs;
 }

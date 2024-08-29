@@ -4,7 +4,7 @@
 
 constexpr int INF = INT_MAX >> 1;
 
-__global__ static void init(nodeId_t nodeNum, nodeId_t sourceId, weight_t* cost)
+__global__ void initCost(nodeId_t nodeNum, nodeId_t sourceId, weight_t* cost)
 {
     int tId = blockDim.x * blockIdx.x + threadIdx.x;
     if (tId < nodeNum) {
@@ -16,7 +16,7 @@ __global__ static void init(nodeId_t nodeNum, nodeId_t sourceId, weight_t* cost)
     }
 }
 
-__global__ static void bellmanFord(nodeId_t nodeNum, nodeId_t* edgeIndicesStart, nodeId_t* edgeIndicesEnd,
+__global__ void bellmanFord(nodeId_t nodeNum, nodeId_t* edgeIndicesStart, nodeId_t* edgeIndicesEnd,
     weight_t* ea, weight_t* weights, weight_t* cost)
 {
     int tId = blockDim.x * blockIdx.x + threadIdx.x;
@@ -48,7 +48,7 @@ std::vector<weight_t> cudaSSSP(LinkGraph& graph, nodeId_t sourceId)
     weight_t* d_cost;
     checkError(cudaMalloc(&d_cost, nodeNum * sizeof(weight_t)));
 
-    init<<<grid, block>>>(nodeNum, sourceId, d_cost);
+    initCost<<<grid, block>>>(nodeNum, sourceId, d_cost);
     checkError(cudaDeviceSynchronize());
 
     // 不考虑负权边
