@@ -27,3 +27,19 @@ struct CudaLinkGraph {
     CudaLinkGraph(LinkGraph& graph);
     ~CudaLinkGraph();
 };
+
+/// @brief CUDA显存中的邻接矩阵 (Adjacency Matrix)
+struct CudaMatGraph {
+    /// @brief 节点数量
+    nodeId_t nodeNum;
+
+    // 以下指针指向显存
+
+    /// @brief 指向显存中的邻接矩阵
+    weight_t* d_mat;
+    
+    CudaMatGraph(MatrixGraph& graph);
+    ~CudaMatGraph();
+};
+
+#define matGet(mat, nodeNum, i, j) mat[(nodeNum) * (i) + (j)]

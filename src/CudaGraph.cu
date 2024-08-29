@@ -31,12 +31,6 @@ CudaLinkGraph::CudaLinkGraph(LinkGraph& memoryGraph)
             h_endEdgeIndices[i] = h_startEdgeIndices[nextNodeIndex];
         }
     }
-    std::cout << "startIndices: ";
-    std::for_each(h_startEdgeIndices.begin(), h_startEdgeIndices.end(), [](int i) { std::cout << i << ' '; });
-    std::cout << std::endl;
-    std::cout << "endIndices: ";
-    std::for_each(h_endEdgeIndices.begin(), h_endEdgeIndices.end(), [](int i) { std::cout << i << ' '; });
-    std::cout << std::endl;
     
     checkError(cudaMalloc(&d_edgeIndicesStart, edgeNum * sizeof(nodeId_t)));
     checkError(cudaMemcpy(d_edgeIndicesStart, h_startEdgeIndices.data(), nodeNum * sizeof(nodeId_t), cudaMemcpyHostToDevice));
@@ -54,4 +48,16 @@ CudaLinkGraph::~CudaLinkGraph()
     checkError(cudaFree(d_edgeIndicesEnd));
     checkError(cudaFree(d_ea));
     checkError(cudaFree(d_weights));
+}
+
+CudaMatGraph::CudaMatGraph(MatrixGraph& graph)
+{
+    nodeNum = graph.getNodeNum();
+    checkError(cudaMalloc(&d_mat, nodeNum * nodeNum * sizeof(weight_t)));
+    checkError(cudaMemcpy(d_mat, graph._mat.data(), nodeNum * nodeNum * sizeof(weight_t), cudaMemcpyHostToDevice));
+}
+
+CudaMatGraph::~CudaMatGraph()
+{
+    checkError(cudaFree(d_mat));
 }

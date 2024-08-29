@@ -52,12 +52,6 @@ protected:
 
 public:
     virtual nodeId_t getNodeNum() const = 0;
-    virtual std::vector<nodeId_t> dijkstra(nodeId_t start) = 0;
-
-    virtual bool hasCycle() = 0;
-
-    virtual std::vector<nodeId_t> bfs(nodeId_t start) = 0;
-    virtual std::vector<std::vector<nodeId_t>> floyd() = 0;
 };
 
 /// @brief 基于紧凑邻接表的图
@@ -80,20 +74,21 @@ public:
     }
 
     nodeId_t getNodeNum() const { return vertexNum; }
+    nodeId_t getEdgeNum() const { return (nodeId_t)ea.size(); }
 
     // 获取节点的后继迭代器
     LinkGraphNeighborIterator getSuccessors(nodeId_t nodeId);
 
-    std::vector<nodeId_t> dijkstra(nodeId_t start) override;
+    std::vector<nodeId_t> dijkstra(nodeId_t start);
 
-    std::vector<nodeId_t> bfs(nodeId_t start) override;
+    std::vector<nodeId_t> bfs(nodeId_t start);
 
-    std::vector<std::vector<nodeId_t>> floyd() override;
+    std::vector<std::vector<nodeId_t>> floyd();
 
-    bool hasCycle() override;
+    bool hasCycle();
 
     // va和ea作用见文献
-    std::vector<size_t> va;
+    std::vector<nodeId_t> va;
     std::vector<nodeId_t> ea;
     // 边的权重
     std::vector<weight_t> weights;
@@ -124,11 +119,11 @@ public:
     nodeId_t getNodeNum() const { return vertexNum; }
 
     weight_t& mat(nodeId_t i, nodeId_t j) { return _mat[i * vertexNum + j]; }
-    std::vector<nodeId_t> dijkstra(nodeId_t start) override;
+    std::vector<weight_t> dijkstra(nodeId_t start);
 
-    bool hasCycle() override;
+    bool hasCycle();
 
-    std::vector<std::vector<nodeId_t>> floyd() override;
+    std::vector<std::vector<weight_t>> floyd();
 
     std::vector<weight_t> _mat;
     nodeId_t vertexNum;

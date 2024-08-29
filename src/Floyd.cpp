@@ -1,10 +1,10 @@
 #include "Graph.h"
 
-std::vector<std::vector<nodeId_t>> LinkGraph::floyd()
+std::vector<std::vector<weight_t>> LinkGraph::floyd()
 {
     nodeId_t n = this->getNodeNum();
     weight_t inf = 0x3f3f3f3f;
-    std::vector<std::vector<nodeId_t>> dist(n, std::vector<int>(n, inf));
+    std::vector<std::vector<weight_t>> dist(n, std::vector<weight_t>(n, inf));
     for (int i = 0; i < n; i++) {
         auto pointer = getSuccessors(i);
         while (!pointer.end()) {
@@ -29,11 +29,11 @@ std::vector<std::vector<nodeId_t>> LinkGraph::floyd()
     return dist;
 }
 
-std::vector<std::vector<nodeId_t>> MatrixGraph::floyd()
+std::vector<std::vector<weight_t>> MatrixGraph::floyd()
 {
     nodeId_t n = this->getNodeNum();
     weight_t inf = 0x3f3f3f3f;
-    std::vector<std::vector<nodeId_t>> dist(n, std::vector<int>(n, inf));
+    std::vector<std::vector<weight_t>> dist(n, std::vector<int>(n, inf));
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {

@@ -22,17 +22,13 @@ int main()
         dests.push_back(dest);
         weights.push_back(weight);
     }
-    LinkGraph linkGraph(nodeNum, sources, dests, weights);
-    cout << "va: ";
-    for_each(linkGraph.va.begin(), linkGraph.va.end(), [](int i) { cout << i << ' '; });
-    cout << endl;
-    cout << "ea: ";
-    for_each(linkGraph.ea.begin(), linkGraph.ea.end(), [](int i) { cout << i << ' '; });
-    cout << endl;
-
-    auto costs = cudaSSSP(linkGraph, 0);
-    cout << "costs: ";
-    for_each(costs.begin(), costs.end(), [](int i) { cout << i << ' '; });
-    cout << endl;
+    MatrixGraph matGraph(nodeNum, sources, dests, weights);
+    for (int i = 0; i < matGraph.vertexNum * matGraph.vertexNum; i++) {
+        cout << i << '\t';
+        if (i != 0 && i % matGraph.vertexNum == 0) {
+            cout << '\n';
+        }
+    }
+    
     return 0;
 }
