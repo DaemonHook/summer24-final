@@ -9,6 +9,7 @@
 #include <queue>
 #include <utility>
 #include <vector>
+#include <stdint.h>
 
 class LinkGraphNeighborIterator {
 public:
@@ -74,7 +75,7 @@ public:
     }
 
     nodeId_t getNodeNum() const { return vertexNum; }
-    nodeId_t getEdgeNum() const { return (nodeId_t)ea.size(); }
+    int64_t getEdgeNum() const { return (int64_t)ea.size(); }
 
     // 获取节点的后继迭代器
     LinkGraphNeighborIterator getSuccessors(nodeId_t nodeId);
