@@ -62,7 +62,7 @@ LinkGraphNeighborIterator LinkGraph::getSuccessors(nodeId_t nodeId)
 
 void MatrixGraph::construct(nodeId_t nodeNum, const std::vector<nodeId_t>& sources, const std::vector<nodeId_t>& dests, const std::vector<weight_t>& weights)
 {
-    _mat.resize(nodeNum * nodeNum, -1);
+    _mat.resize(nodeNum * nodeNum, 0);
 
     assert(sources.size() == dests.size() && dests.size() == weights.size());
 
