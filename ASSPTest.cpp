@@ -47,7 +47,7 @@ int main()
     cudaEventElapsedTime(&duration, start, stop);
     cudaEventDestroy(start);
     cout << "Floyd gpu time: " << duration << endl;
-
+    return 0;
     // checkError(cudaEventCreate(&start));
     // checkError(cudaEventCreate(&stop));
     // checkError(cudaEventRecord(start));

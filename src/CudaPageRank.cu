@@ -78,23 +78,9 @@ std::vector<float> cudaPageRank(MatrixGraph& graph)
     checkError(cudaMemcpy(d_mat, h_mat.data(), n * n * sizeof(float), cudaMemcpyHostToDevice));
     initMatrix<<<grid, block>>>(d_mat, n);
 
-    // debug
-    // checkError(cudaDeviceSynchronize());
-    // checkError(cudaMemcpy(h_mat.data(), d_mat, n * n * sizeof(float), cudaMemcpyDeviceToHost));
-    // std::cout << "MAT:\n";
-    // std::for_each(h_mat.begin(), h_mat.end(), [](float f) { std::cout << f << ' '; });
-    // std::cout << std::endl;
-
     float* d_r;
     checkError(cudaMalloc(&d_r, n * sizeof(float)));
     initRank<<<grid, block>>>(d_r, n);
-
-    // debug
-    // checkError(cudaDeviceSynchronize());
-    // checkError(cudaMemcpy(h_r.data(), d_r, n * sizeof(float), cudaMemcpyDeviceToHost));
-    // std::cout << "rank:\n";
-    // std::for_each(h_r.begin(), h_r.end(), [](float f) { std::cout << f << ' '; });
-    // std::cout << std::endl;
 
     float* d_rLast;
     checkError(cudaMalloc(&d_rLast, n * sizeof(float)));
