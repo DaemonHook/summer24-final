@@ -1,6 +1,6 @@
-#include "CudaBFS.h"
 #include "CudaCheckError.h"
 #include "CudaGraph.h"
+#include "CudaSSSP.h"
 #include "Graph.h"
 #include <algorithm>
 #include <chrono>
@@ -30,20 +30,20 @@ int main()
     LinkGraph lg(nodeNum, sources, dests, weights);
 
     auto t1 = chrono::steady_clock::now();
-    auto res1 = lg.bfs(0);
+    auto res1 = lg.dijkstra(first);
     auto t2 = chrono::steady_clock::now();
     auto timeUsed = chrono::duration_cast<chrono::milliseconds>(chrono::duration<double>(t2 - t1));
-    cout << "BFS cpu time: " << timeUsed.count() << endl;
+    cout << "SSSP cpu time: " << timeUsed.count() << endl;
 
     cudaEvent_t start, stop;
     float duration;
     checkError(cudaEventCreate(&start));
     checkError(cudaEventCreate(&stop));
     checkError(cudaEventRecord(start));
-    auto res = cudaBFS(lg, 0);
+    auto res = cudaSSSP(lg, first);
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&duration, start, stop);
     cudaEventDestroy(start);
-    cout << "BFS gpu time: " << duration << endl;
+    cout << "SSSP gpu time: " << duration << endl;
 }

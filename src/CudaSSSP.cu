@@ -56,6 +56,7 @@ std::vector<weight_t> cudaSSSP(LinkGraph& graph, nodeId_t sourceId)
         bellmanFord<<<grid, block>>>(nodeNum, cudaLG.d_edgeIndicesStart, cudaLG.d_edgeIndicesEnd, cudaLG.d_ea,
             cudaLG.d_weights, d_cost);
         checkError(cudaDeviceSynchronize());
+        // printf("%d\n", i);
     }
 
     std::vector<weight_t> cost(nodeNum);

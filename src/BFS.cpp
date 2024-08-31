@@ -4,7 +4,7 @@ std::vector<nodeId_t> LinkGraph::bfs(nodeId_t start)
 {
     std::vector<bool> vis(getNodeNum());
     std::queue<nodeId_t> Q;
-    std::vector<nodeId_t> result(1);
+    std::vector<nodeId_t> result(getNodeNum());
     Q.push(start);
     nodeId_t level = 0;
     vis[start] = true;
@@ -20,7 +20,6 @@ std::vector<nodeId_t> LinkGraph::bfs(nodeId_t start)
                 if (!vis[nei]) {
                     vis[nei] = true;
                     Q.push(nei);
-                    result.push_back(nei);
                 }
                 pointer.toNext();
             }

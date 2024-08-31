@@ -26,5 +26,8 @@ target_link_libraries(test ${CUDA_LIBRARIES})
 add_executable(BFSTest ${SOURCE_FILES} BFSTest.cpp)
 target_link_libraries(BFSTest ${CUDA_LIBRARIES})
 
+add_executable(SSSPTest ${SOURCE_FILES} SSSPTest.cpp)
+target_link_libraries(SSSPTest ${CUDA_LIBRARIES})
+
 add_executable(PageRankTest ${SOURCE_FILES} PageRankTest.cpp)
 target_link_libraries(PageRankTest ${CUDA_LIBRARIES})
