@@ -7,9 +7,9 @@
 #include <map>
 #include <memory>
 #include <queue>
+#include <stdint.h>
 #include <utility>
 #include <vector>
-#include <stdint.h>
 
 class LinkGraphNeighborIterator {
 public:
@@ -84,7 +84,6 @@ public:
     std::vector<weight_t> bellmanFord(nodeId_t start);
 
     std::vector<distance_t> bfs(nodeId_t start);
-
     std::vector<std::vector<nodeId_t>> floyd();
 
     /// @brief 获取所有边

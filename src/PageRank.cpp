@@ -46,7 +46,7 @@ std::vector<float> pageRank(MatrixGraph& graph)
     std::vector<float> mat(n * n);
 
     // 连通为1，不连通为0
-    std::transform(graph._mat.begin(), graph._mat.end(), mat.begin(), [](weight_t i) { if (i > 0) return 1; else return 0; });
+    std::transform(graph._mat.begin(), graph._mat.end(), mat.begin(), [](weight_t i) { if (i > 0) return 1.0f; else return 0.0f; });
 
     init(mat, n);
 

@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<> weightDistr(0, 8172);
-    uniform_int_distribution<ll> edgeDistr(0, n * n);
+    uniform_int_distribution<ll> edgeDistr(0, n * n - 1);
     unordered_set<ll> visited;
 
     for (ll i = 0; i < m;) {

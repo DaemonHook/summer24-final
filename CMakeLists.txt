@@ -34,3 +34,6 @@ target_link_libraries(PageRankTest ${CUDA_LIBRARIES})
 
 add_executable(ASSPTest ${SOURCE_FILES} ASSPTest.cpp)
 target_link_libraries(ASSPTest ${CUDA_LIBRARIES})
+
+add_executable(PrimTest ${SOURCE_FILES} PrimTest.cpp)
+target_link_libraries(PrimTest ${CUDA_LIBRARIES})
