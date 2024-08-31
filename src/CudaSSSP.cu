@@ -28,15 +28,14 @@ __global__ void bellmanFord(nodeId_t nodeNum, nodeId_t* edgeIndicesStart, nodeId
             nodeId_t neighbor = ea[i];
             weight_t weight = weights[i];
             // 如果当前节点可达
-            if (cost[tId] != INF) {
-                // 防止读者写者问题
-                atomicMin(&cost[neighbor], cost[tId] + weight);
+            if (cost[tId] != INF && cost[tId] + weight < cost[neighbor]) {
+                cost[neighbor] = cost[tId] + weight;
             }
         }
     }
 }
 
-std::vector<weight_t> cudaSSSP(LinkGraph& graph, nodeId_t sourceId)
+std::vector<weight_t> cudaBellmanFord(LinkGraph& graph, nodeId_t sourceId)
 {
     CudaLinkGraph cudaLG(graph);
     nodeId_t nodeNum = graph.getNodeNum();

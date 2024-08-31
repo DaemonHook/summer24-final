@@ -1,9 +1,11 @@
-#include "PageRank.h"
 #include "CudaPageRank.h"
+#include "PageRank.h"
+#include "CudaCheckError.h"
+#include "CudaGraph.h"
 #include "Graph.h"
 #include <algorithm>
+#include <chrono>
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
@@ -14,19 +16,35 @@ int main()
     cin >> nodeNum >> edgeNum;
     vector<nodeId_t> sources, dests;
     vector<weight_t> weights;
+    nodeId_t first = -1;
     for (int i = 0; i < edgeNum; i++) {
         nodeId_t source, dest;
         weight_t weight;
         cin >> source >> dest >> weight;
+        if (first == -1) {
+            first = source;
+        }
         sources.push_back(source);
         dests.push_back(dest);
         weights.push_back(weight);
     }
-    MatrixGraph matGraph(nodeNum, sources, dests, weights);
-    vector<float> rank = pageRank(matGraph);
-    for_each(rank.begin(), rank.end(), [](float f) { cout << f << ' '; });
-    cout << endl;
-    vector<float> cudaRank = cudaPageRank(matGraph);
-    for_each(cudaRank.begin(), cudaRank.end(), [](float f) { cout << f << ' '; });
-    cout << endl;
+    MatrixGraph mg(nodeNum, sources, dests, weights);
+
+    auto t1 = chrono::steady_clock::now();
+    auto res1 = pageRank(mg);
+    auto t2 = chrono::steady_clock::now();
+    auto timeUsed = chrono::duration_cast<chrono::milliseconds>(chrono::duration<double>(t2 - t1));
+    cout << "Pagerank cpu time: " << timeUsed.count() << endl;
+
+    cudaEvent_t start, stop;
+    float duration;
+    checkError(cudaEventCreate(&start));
+    checkError(cudaEventCreate(&stop));
+    checkError(cudaEventRecord(start));
+    auto res = cudaPageRank(mg); 
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&duration, start, stop);
+    cudaEventDestroy(start);
+    cout << "Pagerank gpu time: " << duration << endl;
 }

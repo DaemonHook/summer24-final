@@ -11,4 +11,4 @@ __global__ void bellmanFord(nodeId_t nodeNum, nodeId_t* edgeIndicesStart, nodeId
 
 /// @brief Cuda的单源最短路径
 /// @return 源点到每个点的最短路径长度
-std::vector<weight_t> cudaSSSP(LinkGraph& graph, nodeId_t sourceId);
+std::vector<weight_t> cudaBellmanFord(LinkGraph& graph, nodeId_t sourceId);

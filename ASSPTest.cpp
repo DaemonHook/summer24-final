@@ -1,6 +1,7 @@
+#include "CudaASSP.h"
+#include "CudaBFS.h"
 #include "CudaCheckError.h"
 #include "CudaGraph.h"
-#include "CudaSSSP.h"
 #include "Graph.h"
 #include <algorithm>
 #include <chrono>
@@ -30,26 +31,30 @@ int main()
     LinkGraph lg(nodeNum, sources, dests, weights);
 
     auto t1 = chrono::steady_clock::now();
-    auto res1 = lg.dijkstra(first);
+    auto res1 = lg.floyd();
     auto t2 = chrono::steady_clock::now();
     auto timeUsed = chrono::duration_cast<chrono::milliseconds>(chrono::duration<double>(t2 - t1));
-    cout << "Dijkstra cpu time: " << timeUsed.count() << endl;
-
-    t1 = chrono::steady_clock::now();
-    res1 = lg.bellmanFord(first);
-    t2 = chrono::steady_clock::now();
-    timeUsed = chrono::duration_cast<chrono::milliseconds>(chrono::duration<double>(t2 - t1));
-    cout << "Bellman-ford cpu time: " << timeUsed.count() << endl;
+    cout << "Floyd cpu time: " << timeUsed.count() << endl;
 
     cudaEvent_t start, stop;
     float duration;
     checkError(cudaEventCreate(&start));
     checkError(cudaEventCreate(&stop));
     checkError(cudaEventRecord(start));
-    auto res = cudaBellmanFord(lg, first);
+    auto res = cudaFloydWarshall(lg);
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&duration, start, stop);
     cudaEventDestroy(start);
-    cout << "Bellman-ford gpu time: " << duration << endl;
+    cout << "Floyd gpu time: " << duration << endl;
+
+    // checkError(cudaEventCreate(&start));
+    // checkError(cudaEventCreate(&stop));
+    // checkError(cudaEventRecord(start));
+    // res = CudaASSP(lg);
+    // cudaEventRecord(stop);
+    // cudaEventSynchronize(stop);
+    // cudaEventElapsedTime(&duration, start, stop);
+    // cudaEventDestroy(start);
+    // cout << "Multi bellman-ford gpu time: " << duration << endl;
 }

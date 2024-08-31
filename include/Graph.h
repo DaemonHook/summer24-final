@@ -80,11 +80,16 @@ public:
     // 获取节点的后继迭代器
     LinkGraphNeighborIterator getSuccessors(nodeId_t nodeId);
 
-    std::vector<nodeId_t> dijkstra(nodeId_t start);
+    std::vector<weight_t> dijkstra(nodeId_t start);
+    std::vector<weight_t> bellmanFord(nodeId_t start);
 
-    std::vector<nodeId_t> bfs(nodeId_t start);
+    std::vector<distance_t> bfs(nodeId_t start);
 
     std::vector<std::vector<nodeId_t>> floyd();
+
+    /// @brief 获取所有边
+    /// @return 每个元素为 [[起点，终点]，权重]
+    std::vector<std::pair<std::pair<nodeId_t, nodeId_t>, weight_t>> getAllEdges();
 
     bool hasCycle();
 
